@@ -23,6 +23,7 @@ import paramiko
 import select
 import socket
 import time
+import datetime
 
 try:
     import termios
@@ -37,6 +38,9 @@ username = 'root'
 password = 'redhat'
 host = '192.168.244.129'
 port = 22
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
 
 
 def color_print(msg, color='red', exit=False):
@@ -86,7 +90,21 @@ class TTY:
         self.ssh = ssh
         self.chan = ssh.invoke_shell(term='xterm')
 
+    def __get_log_f(self):
+        now = datetime.datetime.now()
+        date_today = now.strftime('%Y%m%d')
+        time_now = now.strftime('%H%M%S')
+        log_today_dir = os.path.join(LOG_DIR, date_today)
+        log_filename = os.path.join(log_today_dir, '{host}-{port}-{username}-{date}{time}.log'.format(
+            host=self.host, port=self.port, username=self.username, date=date_today, time=time_now,
+        ))
+        if not os.path.isdir(log_today_dir):
+            os.mkdir(log_today_dir, mode=0o777)
+        log_f = open(log_filename, 'a')
+        return log_f
+
     def posix_shell(self):
+        log_f = self.__get_log_f()
         old_tty = termios.tcgetattr(sys.stdin)
         try:
             # 设置tty为raw模式, 不再使用已经设置好的tty, tty需要由我们来重新控制
@@ -107,6 +125,8 @@ class TTY:
                             break
                         sys.stdout.write(recv_data)
                         sys.stdout.flush()
+                        # 记录输入输出到日志
+                        log_f.write(recv_data)
                     except socket.timeout:
                         print('Timeout')
                 if sys.stdin in r:
