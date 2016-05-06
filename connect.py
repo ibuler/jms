@@ -69,6 +69,11 @@ class TTY:
         self.__get_chan()
 
     def __get_chan(self):
+        """
+        使用paramiko模块与后端ssh建立channel
+        paramiko的channel其实是与后面ssh server建立了一个tcp长连接,输入都会发送到后面的主机上
+        :return: None
+        """
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
@@ -84,6 +89,7 @@ class TTY:
     def posix_shell(self):
         old_tty = termios.tcgetattr(sys.stdin)
         try:
+            # 设置tty为raw模式, 不再使用已经设置好的tty, tty需要由我们来重新控制
             tty.setraw(sys.stdin.fileno())
             tty.setcbreak(sys.stdin.fileno())
             self.chan.settimeout(0.0)
@@ -110,6 +116,7 @@ class TTY:
                     self.chan.send(x)
 
         finally:
+            # 最终将原来的tty返回给用户
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_tty)
 
 
