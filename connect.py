@@ -138,6 +138,7 @@ class TTY:
         finally:
             # 最终将原来的tty返回给用户
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_tty)
+            log_f.close()
 
 
 if __name__ == '__main__':
