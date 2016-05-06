@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}用户管理{% endblock %}
+{% block css %}
+    .icon:hover{
+        color: red;
+    }
+{% endblock %}
+{% block content %}
+    <div class="ui right floated small primary labeled icon button" id="user_add_btn"><i class="user icon"></i> Add </div>
+    <h1 class="ui header">用户列表</h1>
+    <table class="ui striped table">
+        <thead>
+        <tr>
+            <th>用户名</th>
+            <th>E-mail</th>
+            <th>Date Joined</th>
+            <th>管理员</th>
+            <th>Active</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr {% if not user.is_active %} class="error" {% endif %}>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.date_joined|date:"Y-m-d H:i:s" }}</td>
+                {% if user.is_superuser %}
+                    <td class="aligned">
+                        <i class="large green checkmark icon"></i>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if not user.is_active %}
+                    <td class="error"><i class="attention icon"></i> 否</td>
+                {% else %}
+                    <td class="aligned">
+                        <i class="large green checkmark icon"></i>
+                    </td>
+                {% endif %}
+                <td><i class="remove user icon" href="#" value="{{ user.id }}"></i></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="ui small modal transition hidden">
+        <i class="close icon"></i>
+        <div class="header">
+            添加用户
+        </div>
+    </div>
+{% endblock %}
