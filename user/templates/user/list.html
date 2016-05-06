@@ -50,5 +50,28 @@
         <div class="header">
             添加用户
         </div>
+
+        <div class="content">
+            <form class="ui form"  method="post" action="{% url 'user:add' %}">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="ui button" type="submit">Submit</button>
+            </form>
+        </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function (){
+            $('#user_add_btn').click(function () {
+                $('.small.modal').modal('show');
+            });
+        })
+    </script>
 {% endblock %}
