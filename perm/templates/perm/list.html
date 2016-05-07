@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load mytags %}
 {% block title %}授权管理{% endblock %}
 {% block css %}
     .icon:hover{
@@ -21,9 +22,9 @@
         {% for user in users %}
             <tr>
                 <td>{{ user.username }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.username }}</td>
+                <td>{{ user.id | get_user_perm_asset_count }}</td>
+                <td><i class="perm flush  remove icon" href="#" value="{{ user.id }}"></i></td>
+                <td><a href="#"><i class="arrow circle outline right icon"></i></a></td>
             </tr>
         {% endfor %}
         </tbody>
