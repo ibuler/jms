@@ -28,5 +28,35 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="ui small modal transition hidden">
+        <i class="close icon"></i>
+        <div class="header">
+            添加授权
+        </div>
+
+        <div class="content">
+            <form class="ui form"  method="post" action="{% url 'perm:add' %}">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="ui button" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#perm_add_btn').click(function () {
+                $('.small.modal')
+                        .modal('show');
+            });
+        })
+    </script>
+{% endblock %}

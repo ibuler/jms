@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Perm
+
+
+@admin.register(Perm)
+class AssetAdmin(admin.ModelAdmin):
+    pass
