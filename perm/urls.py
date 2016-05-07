@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^add/$', views.perm_add, name='add'),
     url(r'^detail/(\d+)/$', views.perm_detail, name='detail'),
     url(r'^recycle/$', views.perm_recycle, name='recycle'),
+    url(r'^del/$', views.perm_del, name='del'),
 
 ]

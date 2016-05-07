@@ -2,7 +2,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.models import User
@@ -42,6 +42,21 @@ def perm_recycle(request):
 
     perms = Perm.objects.filter(user=user, asset=asset)
     for perm in perms:
-        perm.asset.remove(asset)
+        perm.user.remove(user)
 
     return HttpResponse('回收成功')
+
+
+@require_POST
+def perm_del(request):
+    user_id = request.POST.get('id')
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Http404('删除失败')
+
+    perms = user.perm_set.all()
+    for perm in perms:
+        perm.user.remove(user)
+
+    return HttpResponse('清空成功')
