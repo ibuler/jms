@@ -71,7 +71,7 @@
                 Log-in to your account
             </div>
         </h2>
-        <form class="ui large form" method="post" action="#">
+        <form class="ui large form" method="post" action="{% url 'user:login' %}">
             {% csrf_token %}
             <div class="ui stacked segment">
                 <div class="field">
@@ -87,6 +87,15 @@
                     </div>
                 </div>
                 <div class="ui fluid large teal submit button">Login</div>
+            </div>
+
+            {% if error %}
+                <div class="ui message error visible">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <div class="ui message error">
             </div>
         </form>
 

@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import authenticate, login
 
 from django.contrib.auth.models import User
 
@@ -47,4 +47,20 @@ def user_del(request):
 
 
 def login_(request):
-    return render(request, 'user/login.html')
+    error = ''
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('user:list'))
+            else:
+                error = '用户已禁用'
+        else:
+            error = '用户密码不正确'
+    return render(request, 'user/login.html', {'error': error})
+
+
+
