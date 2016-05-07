@@ -19,7 +19,7 @@
         {% for asset in user_id|get_user_perm_asset_list %}
             <tr>
                 <td>{{ asset.ip }}</td>
-                <td><i class="perm recycle remove icon" href="#" asset="{{ asset.id }}"></i></td>
+                <td><i class="perm recycle remove icon" href="{% url 'perm:recycle' %}" user="{{ user_id }}" asset="{{ asset.id }}"></i></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -43,6 +43,25 @@
                     }
                 }
             });
+
+            $('.perm.recycle').click(function(){
+                var url = $(this).attr('href');
+                var user_id = $(this).attr('user');
+                var asset_id = $(this).attr('asset');
+                if (confirm('确定回收')){
+                    $.post(
+                            url,
+                            {
+                                'user_id': user_id,
+                                'asset_id': asset_id
+                            },
+                            function(){
+                                console.log('回收成功');
+                                location.reload()
+                            }
+                    )
+                }
+            })
         })
     </script>
 {% endblock %}

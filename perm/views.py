@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from .forms import PermForm
+from .models import Perm
+from asset.models import Asset
 
 
 def perm_list(request):
@@ -28,3 +30,18 @@ def perm_add(request):
 
 def perm_detail(request, user_id):
     return render(request, 'perm/detail.html', {'user_id': user_id})
+
+
+@require_POST
+def perm_recycle(request):
+    user_id = request.POST.get('user_id', '0')
+    asset_id = request.POST.get('asset_id', '0')
+
+    user = get_object_or_404(User, id=user_id)
+    asset = get_object_or_404(Asset, id=asset_id)
+
+    perms = Perm.objects.filter(user=user, asset=asset)
+    for perm in perms:
+        perm.asset.remove(asset)
+
+    return HttpResponse('回收成功')
