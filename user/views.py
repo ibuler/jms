@@ -1,8 +1,9 @@
 # coding: utf-8
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 
 from django.contrib.auth.models import User
@@ -36,3 +37,11 @@ def user_list(request):
     users = User.objects.all()
     form = UserAddForm()
     return render(request, 'user/list.html', {'users': users, 'form': form})
+
+
+@csrf_exempt
+def user_del(request):
+    user_id = request.POST.get('id')
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return HttpResponse('删除成功')

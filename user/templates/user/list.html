@@ -39,7 +39,7 @@
                         <i class="large green checkmark icon"></i>
                     </td>
                 {% endif %}
-                <td><i class="remove user icon" href="#" value="{{ user.id }}"></i></td>
+                <td><i class="remove user icon" href="{% url 'user:del' %}" value="{{ user.id }}"></i></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -72,6 +72,23 @@
             $('#user_add_btn').click(function () {
                 $('.small.modal').modal('show');
             });
+
+            $('.remove.user').click(function(){
+                var url = $(this).attr('href');
+                var id = $(this).attr('value');
+                if (confirm('确定删除')){
+                    $.post(
+                            url,
+                            {'id': id},
+                            function(){
+                                console.log('删除用户成功');
+                                location.reload()
+                            }
+                    )
+
+                }
+            })
+
         })
     </script>
 {% endblock %}
