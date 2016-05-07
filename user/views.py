@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.contrib.auth.models import User
 
@@ -17,6 +17,7 @@ from .utils import Bash, ServerUserManager
 
 #@login_required
 @login_required(login_url=reverse_lazy('user:login'))
+@user_passes_test(lambda user: user.is_superuser)
 def user_add(request):
     form = UserAddForm(request.POST)
     if form.is_valid():
@@ -37,6 +38,7 @@ def user_add(request):
 
 
 @login_required(login_url=reverse_lazy('user:login'))
+@user_passes_test(lambda user: user.is_superuser)
 def user_list(request):
     users = User.objects.all()
     form = UserAddForm()
@@ -44,6 +46,7 @@ def user_list(request):
 
 
 @login_required(login_url=reverse_lazy('user:login'))
+@user_passes_test(lambda user: user.is_superuser)
 def user_del(request):
     user_id = request.POST.get('id')
     user = get_object_or_404(User, id=user_id)
