@@ -2,9 +2,10 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 
@@ -14,6 +15,8 @@ from .utils import Bash, ServerUserManager
 # Create your views here.
 
 
+#@login_required
+@login_required(login_url=reverse_lazy('user:login'))
 def user_add(request):
     form = UserAddForm(request.POST)
     if form.is_valid():
@@ -33,12 +36,14 @@ def user_add(request):
         return HttpResponse('验证失败')
 
 
+@login_required(login_url=reverse_lazy('user:login'))
 def user_list(request):
     users = User.objects.all()
     form = UserAddForm()
     return render(request, 'user/list.html', {'users': users, 'form': form})
 
 
+@login_required(login_url=reverse_lazy('user:login'))
 def user_del(request):
     user_id = request.POST.get('id')
     user = get_object_or_404(User, id=user_id)
