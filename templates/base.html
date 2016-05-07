@@ -46,7 +46,9 @@
               <img class="logo" src="{% static 'img/logo.png' %}">
               JMS
             </a>
-            <a class="item">用户</a>
+            <a href="{% url 'user:list' %}" class="item">用户</a>
+            <a href="{% url 'asset:list' %}" class="item">资产</a>
+            <a href="{% url 'perm:list' %}" class="item">授权</a>
             <div class="ui simple dropdown item">
                 其它<i class="dropdown icon"></i>
                 <div class="menu">
