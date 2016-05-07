@@ -24,7 +24,7 @@
                 <td>{{ user.username }}</td>
                 <td>{{ user.id | get_user_perm_asset_count }}</td>
                 <td><i class="perm flush  remove icon" href="#" value="{{ user.id }}"></i></td>
-                <td><a href="#"><i class="arrow circle outline right icon"></i></a></td>
+                <td><a href="{% url 'perm:detail' user.id %}"><i class="arrow circle outline right icon"></i></a></td>
             </tr>
         {% endfor %}
         </tbody>

@@ -24,3 +24,7 @@ def perm_add(request):
         return redirect(reverse('perm:list'))
     else:
         return HttpResponse('无效请求')
+
+
+def perm_detail(request, user_id):
+    return render(request, 'perm/detail.html', {'user_id': user_id})
