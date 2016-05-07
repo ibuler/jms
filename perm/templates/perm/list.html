@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}授权管理{% endblock %}
+{% block css %}
+    .icon:hover{
+        color: red;
+    }
+{% endblock %}
+{% block content %}
+    <div class="ui right floated small primary labeled icon button" id="perm_add_btn"><i class="Heterosexual icon"></i> Add </div>
+    <h1 class="ui header">授权列表</h1>
+    <table class="ui striped table">
+        <thead>
+        <tr>
+            <th>用户</th>
+            <th>主机数量</th>
+            <th>清空</th>
+            <th>查看</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.username }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

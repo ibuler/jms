@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+from django.contrib.auth.models import User
+
+
+def perm_list(request):
+    users = User.objects.iterator()
+    return render(request, 'perm/list.html', {'users': users})
