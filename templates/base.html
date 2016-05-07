@@ -73,9 +73,9 @@
                   </div>
                 </div>
                 <div class="ui simple dropdown item">
-                Admin <i class="dropdown icon"></i>
+                {{ request.user.username }} <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="#">登出</a>
+                    <a class="item" href="{% url 'user:logout' %}">登出</a>
                 </div>
             </div>
             </div>

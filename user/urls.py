@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^list/$', views.user_list, name='list'),
     url(r'^del/$', views.user_del, name='del'),
     url(r'^login/$', views.login_, name='login'),
+    url(r'^logout/$', views.logout_, name='logout'),
 ]

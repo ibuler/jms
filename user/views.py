@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.models import User
 
@@ -63,4 +63,6 @@ def login_(request):
     return render(request, 'user/login.html', {'error': error})
 
 
-
+def logout_(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('user:login'))
