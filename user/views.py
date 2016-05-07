@@ -39,7 +39,6 @@ def user_list(request):
     return render(request, 'user/list.html', {'users': users, 'form': form})
 
 
-@csrf_exempt
 def user_del(request):
     user_id = request.POST.get('id')
     user = get_object_or_404(User, id=user_id)
