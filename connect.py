@@ -24,6 +24,18 @@ import select
 import socket
 import time
 import datetime
+import textwrap
+import django
+import getpass
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'jms.settings'
+django.setup()
+
+from perm.perm_api import get_user_asset
+from django.contrib.auth.models import User
+from asset.models import Asset
+
 
 try:
     import termios
@@ -34,10 +46,7 @@ except ImportError:
     sys.exit()
 
 
-username = 'root'
-password = 'redhat'
-host = '192.168.244.129'
-port = 22
+username_login = getpass.getuser()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
@@ -141,6 +150,64 @@ class TTY:
             log_f.close()
 
 
+class TTYNav:
+    def __init__(self, username=username_login):
+        self.username = username
+
+    @property
+    def user(self):
+        try:
+            user = User.objects.get(username=self.username)
+            return user
+        except User.DoesNotExist:
+            return None
+
+    def print_nav(self):
+        nav_string = """\n\033[1;32m###    欢迎使用JMS开源跳板机系统   ### \033[0m
+        1) 输入 \033[32mIP\033[0m 登录设备
+        2) 按 \033[32mp\033[0m 查看有权限的设备
+        3) 按 \033[32mq\033[0m 退出
+        """
+
+        if self.user:
+            print(textwrap.dedent(nav_string))
+        else:
+            color_print('没有该用户，默默的退出', exit=True)
+
+    @staticmethod
+    def get_input():
+        input_ = input('\n请输入: ')
+        return input_
+
+    def print_user_assets(self):
+        print('%-16s\t%s' % ('IP', 'User'))
+        for asset in get_user_asset(self.user):
+            print('%-16s\t%s' % (asset.ip, asset.username))
+
+    @staticmethod
+    def connect(ip):
+        try:
+            asset = Asset.objects.get(ip=ip)
+        except Asset.DoesNotExist:
+            print('输入ip有误请重新输入')
+            return
+        print('{0} {1} {2} {3}'.format(asset.ip, asset.port, asset.username, asset.password,))
+        tty_ = TTY(host=asset.ip, port=asset.port, username=asset.username, password=asset.password)
+        tty_.posix_shell()
+
+    def dispatch(self):
+        while True:
+            input_ = self.get_input()
+            if input_ == 'p':
+                self.print_user_assets()
+                continue
+            elif input_ == 'q':
+                sys.exit(1)
+            else:
+                self.connect(input_)
+
+
 if __name__ == '__main__':
-    tty_ = TTY(host=host, port=port, username=username, password=password)
-    tty_.posix_shell()
+    nav = TTYNav(username=username_login)
+    nav.print_nav()
+    nav.dispatch()
