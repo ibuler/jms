@@ -44,3 +44,7 @@ def user_del(request):
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return HttpResponse('删除成功')
+
+
+def login_(request):
+    return render(request, 'user/login.html')
