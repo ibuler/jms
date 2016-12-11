@@ -12,19 +12,24 @@
     <table class="ui striped table">
         <thead>
         <tr>
-            <th>用户</th>
+            <th>名称</th>
+            <th>用户数量</th>
             <th>主机数量</th>
-            <th>清空</th>
-            <th>查看</th>
+            <th>备注</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        {% for user in users %}
+        {% for perm in perms %}
             <tr>
-                <td>{{ user.username }}</td>
-                <td>{{ user.id | get_user_perm_asset_count }}</td>
-                <td><i class="perm flush  remove icon" href="{% url 'perm:del' %}" value="{{ user.id }}"></i></td>
-                <td><a href="{% url 'perm:detail' user.id %}"><i class="arrow circle outline right icon"></i></a></td>
+                <td>{{ perm.name }}</td>
+                <td>{{ perm.user.count }}</td>
+                <td>{{ perm.asset.count }}</td>
+                <td>{{ perm.comment }}</td>
+                <td>
+                    <i class="perm remove icon" href="{% url 'perm:del' perm.id %}"></i>
+                    <a href="{% url 'perm:detail' perm.id %}"><i class="arrow circle outline right icon"></i></a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -74,15 +79,13 @@
                         .modal('show');
             });
 
-            $('.perm.flush').click(function(){
+            $('.perm.remove').click(function(){
                 var url = $(this).attr('href');
-                var id = $(this).attr('value');
-                if (confirm('确定清空')){
+                if (confirm('确定删除?')){
                     $.post(
                             url,
-                            {'id': id},
                             function(){
-                                console.log('清空成功');
+                                console.log('删除成功');
                                 location.reload()
                             }
                     )

@@ -13,9 +13,9 @@ from asset.models import Asset
 
 
 def perm_list(request):
-    users = User.objects.iterator()
+    perms = Perm.objects.all()
     form = PermForm()
-    return render(request, 'perm/list.html', {'users': users, 'form': form})
+    return render(request, 'perm/list.html', {'perms': perms, 'form': form})
 
 
 @require_POST
@@ -28,35 +28,18 @@ def perm_add(request):
         return HttpResponse('无效请求')
 
 
-def perm_detail(request, user_id):
-    return render(request, 'perm/detail.html', {'user_id': user_id})
+def perm_detail(request, perm_id):
+    perm = get_object_or_404(Perm, id=perm_id)
+    return render(request, 'perm/detail.html', {'perm': perm})
 
 
 @require_POST
 def perm_recycle(request):
-    user_id = request.POST.get('user_id', '0')
-    asset_id = request.POST.get('asset_id', '0')
-
-    user = get_object_or_404(User, id=user_id)
-    asset = get_object_or_404(Asset, id=asset_id)
-
-    perms = Perm.objects.filter(user=user, asset=asset)
-    for perm in perms:
-        perm.user.remove(user)
-
-    return HttpResponse('回收成功')
+    pass
 
 
 @require_POST
-def perm_del(request):
-    user_id = request.POST.get('id')
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        return Http404('删除失败')
-
-    perms = user.perm_set.all()
-    for perm in perms:
-        perm.user.remove(user)
-
-    return HttpResponse('清空成功')
+def perm_del(request, perm_id):
+    perm = get_object_or_404(Perm, id=perm_id)
+    perm.delete()
+    return HttpResponse('删除成功')

@@ -7,61 +7,39 @@
     }
 {% endblock %}
 {% block content %}
-    <h1 class="ui header">资产列表</h1>
-    <table class="ui striped table">
-        <thead>
-        <tr>
-            <th>资产</th>
-            <th>回收</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for asset in user_id|get_user_perm_asset_list %}
-            <tr>
-                <td>{{ asset.ip }}</td>
-                <td><i class="perm recycle remove icon" href="{% url 'perm:recycle' %}" user="{{ user_id }}" asset="{{ asset.id }}"></i></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-{% endblock %}
-{% block script %}
-    <script>
-        $(document).ready(function () {
-            var csrftoken = Cookies.get('csrftoken');
-
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
-            $('.perm.recycle').click(function(){
-                var url = $(this).attr('href');
-                var user_id = $(this).attr('user');
-                var asset_id = $(this).attr('asset');
-                if (confirm('确定回收')){
-                    $.post(
-                            url,
-                            {
-                                'user_id': user_id,
-                                'asset_id': asset_id
-                            },
-                            function(){
-                                console.log('回收成功');
-                                location.reload()
-                            }
-                    )
-                }
-            })
-        })
-    </script>
+    <h1 class="ui header">授权列表</h1>
+    <div class="ui grid">
+        <div class="two wide column">
+            <table class="ui striped table">
+                <thead>
+                <tr>
+                    <th>用户</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for user in perm.user.all %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="two wide column">
+            <table class="ui striped table">
+                <thead>
+                <tr>
+                    <th>资产</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for asset in perm.asset.all %}
+                    <tr>
+                        <td>{{ asset.ip }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

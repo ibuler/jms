@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="ui celled table">
+  <tbody>
+    <tr>
+      <td>用户名: </td>
+      <td>{{ user.username }}</td>
+    </tr>
+    <tr>
+      <td>姓名:</td>
+      <td>{{ user.get_full_name }}</td>
+    </tr>
+    <tr>
+      <td>Email:</td>
+      <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+      <td>管理员:</td>
+      <td>{{ user.is_superuser|yesno:"是,否,未知"}}</td>
+    </tr>
+    <tr>
+      <td>激活:</td>
+      <td>{{ user.is_active|yesno:"是,否,未知"}}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

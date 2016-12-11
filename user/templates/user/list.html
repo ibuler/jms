@@ -12,6 +12,7 @@
         <thead>
         <tr>
             <th>用户名</th>
+            <th>姓名</th>
             <th>E-mail</th>
             <th>Date Joined</th>
             <th>管理员</th>
@@ -22,24 +23,28 @@
         <tbody>
         {% for user in users %}
             <tr {% if not user.is_active %} class="error" {% endif %}>
-                <td>{{ user.username }}</td>
+                <td><a href="{% url 'user:detail' user.id %} }">{{ user.username }}</a></td>
+                <td>{{ user.get_full_name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.date_joined|date:"Y-m-d H:i:s" }}</td>
                 {% if user.is_superuser %}
                     <td class="aligned">
-                        <i class="large green checkmark icon"></i>
+                        <i class="green checkmark icon"></i>
                     </td>
                 {% else %}
                     <td></td>
                 {% endif %}
                 {% if not user.is_active %}
-                    <td class="error"><i class="attention icon"></i> 否</td>
+                    <td class="error"><i class="remove icon"></i></td>
                 {% else %}
                     <td class="aligned">
-                        <i class="large green checkmark icon"></i>
+                        <i class="green checkmark icon"></i>
                     </td>
                 {% endif %}
-                <td><i class="remove user icon" href="{% url 'user:del' %}" value="{{ user.id }}"></i></td>
+                <td>
+                    <a href="{% url 'user:detail' user.id %}" ><i class="edit icon" data-uid="{{ user.id }}"></i></a>
+                    <i class="remove user icon" href="{% url 'user:del' %}" data-uid="{{ user.id }}"></i>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -90,7 +95,8 @@
 
             $('.remove.user').click(function(){
                 var url = $(this).attr('href');
-                var id = $(this).attr('value');
+                var id = $(this).data('uid');
+                console.log(id);
                 if (confirm('确定删除')){
                     $.post(
                             url,
@@ -101,8 +107,7 @@
                             }
                     )
                 }
-            })
-
+            });
         })
     </script>
 {% endblock %}

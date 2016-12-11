@@ -6,17 +6,13 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-
 from django.contrib.auth.models import User
 
-from .forms import UserAddForm
+from .forms import UserAddForm, UserUpdateForm
 from .utils import Bash, ServerUserManager
 
-# Create your views here.
 
-
-#@login_required
-@login_required(login_url=reverse_lazy('user:login'))
+@login_required
 @user_passes_test(lambda user: user.is_superuser)
 def user_add(request):
     form = UserAddForm(request.POST)
@@ -37,7 +33,36 @@ def user_add(request):
         return HttpResponse('验证失败')
 
 
-@login_required(login_url=reverse_lazy('user:login'))
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def user_update(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password'].strip()
+            user = form.save(commit=False)
+            if password:
+                user.set_password(password)
+                user_in_server = ServerUserManager(Bash)
+                ret, msg = user_in_server.present(username=username, password=password)
+                if not ret:
+                    user.save()
+                    return HttpResponseRedirect(reverse('user:list'))
+                else:
+                    user_in_server.absent(username)
+                    return HttpResponse(msg)
+    form = UserUpdateForm(instance=user)
+    return render(request, 'user/update.html', {'form': form})
+
+
+def user_detail(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    return render(request, 'user/detail.html', {'user': user})
+
+
+@login_required
 @user_passes_test(lambda user: user.is_superuser)
 def user_list(request):
     users = User.objects.all()
@@ -45,7 +70,7 @@ def user_list(request):
     return render(request, 'user/list.html', {'users': users, 'form': form})
 
 
-@login_required(login_url=reverse_lazy('user:login'))
+@login_required
 @user_passes_test(lambda user: user.is_superuser)
 def user_del(request):
     user_id = request.POST.get('id')
