@@ -12,7 +12,6 @@ from .forms import UserAddForm, UserUpdateForm
 from .utils import Bash, ServerUserManager
 
 
-@login_required
 @user_passes_test(lambda user: user.is_superuser)
 def user_add(request):
     form = UserAddForm(request.POST)
@@ -47,12 +46,10 @@ def user_update(request, user_id):
                 user.set_password(password)
                 user_in_server = ServerUserManager(Bash)
                 ret, msg = user_in_server.present(username=username, password=password)
-                if not ret:
-                    user.save()
-                    return HttpResponseRedirect(reverse('user:list'))
-                else:
-                    user_in_server.absent(username)
+                if ret:
                     return HttpResponse(msg)
+            user.save()
+            return HttpResponseRedirect(reverse('user:list'))
     form = UserUpdateForm(instance=user)
     return render(request, 'user/update.html', {'form': form})
 
@@ -62,8 +59,6 @@ def user_detail(request, user_id):
     return render(request, 'user/detail.html', {'user': user})
 
 
-@login_required
-@user_passes_test(lambda user: user.is_superuser)
 def user_list(request):
     users = User.objects.all()
     form = UserAddForm()
@@ -72,8 +67,9 @@ def user_list(request):
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser)
-def user_del(request):
-    user_id = request.POST.get('id')
+def user_del(request, user_id):
+    # user_id = request.POST.get('id')
+    print('Is ajax: %s' % request.is_ajax())
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return HttpResponse('删除成功')
