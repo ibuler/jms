@@ -37,7 +37,7 @@ def user_add(request):
 def user_list(request):
     users = User.objects.all()
     form = UserAddForm()
-    return render(request, 'user/list.html', {'users': users, 'form': form})
+    return render(request, 'users/list.html', {'users': users, 'form': form})
 
 
 @login_required(login_url=reverse_lazy('users:login'))
@@ -63,7 +63,7 @@ def login_(request):
                 error = '用户已禁用'
         else:
             error = '用户密码不正确'
-    return render(request, 'user/login.html', {'error': error})
+    return render(request, 'users/login.html', {'error': error})
 
 
 def logout_(request):

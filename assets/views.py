@@ -13,19 +13,19 @@ from users.mixins import LoginRequiredMixin
 class AssetListView(LoginRequiredMixin, ListView):
     model = Asset
     context_object_name = 'assets'
-    template_name = "asset/list.html"
+    template_name = "assets/list.html"
 
 
 class AssetCreateView(LoginRequiredMixin, CreateView):
     model = Asset
     form_class = AssetForm
-    template_name = "asset/add.html"
+    template_name = "assets/add.html"
     success_url = reverse_lazy("assets:list")
 
 
 class AssetDetailView(LoginRequiredMixin, DetailView):
     model = Asset
-    template_name = "asset/detail.html"
+    template_name = "assets/detail.html"
 
 
 class AssetDeleteView(LoginRequiredMixin, View):
