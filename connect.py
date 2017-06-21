@@ -32,9 +32,9 @@ import getpass
 os.environ['DJANGO_SETTINGS_MODULE'] = 'jms.settings'
 django.setup()
 
-from perm.perm_api import get_user_asset
+from perms.perm_api import get_user_asset
 from django.contrib.auth.models import User
-from asset.models import Asset
+from assets.models import Asset
 
 
 try:

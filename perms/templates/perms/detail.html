@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load mytags %}
+{% block title %}授权详情{% endblock %}
+{% block css %}
+    .icon:hover{
+        color: red;
+    }
+{% endblock %}
+{% block content %}
+    <h2>{{ object.name }}</h2>
+    <div class="ui pointing secondary menu">
+        <a class="item active" data-tab="first">用户</a>
+        <a class="item" data-tab="second">资产</a>
+    </div>
+    <div class="ui tab segment active" data-tab="first">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>用户名</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in object.user.all %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="ui tab segment" data-tab="second">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>主机名</th>
+                <th>IP</th>
+                <th>端口</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for asset in object.asset.all %}
+                <tr>
+                    <td>{{ asset.hostname}}</td>
+                    <td>{{ asset.ip }}</td>
+                    <td>{{ asset.port }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $('.ui.menu .item').tab();
+    </script>
+{% endblock %}

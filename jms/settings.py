@@ -31,9 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'user.apps.UserConfig',
-    'asset.apps.AssetConfig',
-    'perm.apps.PermConfig',
+    'users.apps.UsersConfig',
+    'assets.apps.AssetsConfig',
+    'perms.apps.PermsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,6 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+AUTH_USER_MODEL = 'users.USER'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/

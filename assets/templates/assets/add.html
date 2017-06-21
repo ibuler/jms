@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}资产管理{% endblock %}
+{% block css %}
+    .icon:hover{
+    color: red;
+    }
+{% endblock %}
+{% block content %}
+    <h1 class="ui header">资产添加</h1>
+    {% if form.errors %}
+    <div class="ignored error ui message">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+    <form class="ui form" method="post" action="">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button class="ui button" type="submit">Submit</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Site Properties -->
+    <title>Login Example - Semantic</title>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'semantic/semantic.min.css' %}">
+    <script src="{% static 'semantic/semantic.min.js' %}"></script>
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+
+        body > .grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+                    $('.ui.form')
+                            .form({
+                                fields: {
+                                    email: {
+                                        identifier: 'username',
+                                        rules: [
+                                            {
+                                                type: 'empty',
+                                                prompt: 'Please enter your username'
+                                            }
+                                        ]
+                                    },
+                                    password: {
+                                        identifier: 'password',
+                                        rules: [
+                                            {
+                                                type: 'empty',
+                                                prompt: 'Please enter your password'
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                    ;
+                })
+        ;
+    </script>
+</head>
+<body>
+
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <img src="{% static 'img/logo.png' %}" class="image">
+
+            <div class="content">
+                Log-in to your account
+            </div>
+        </h2>
+        <form class="ui large form" method="post" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="ui fluid large teal submit button">Login</div>
+            </div>
+
+            {% if error %}
+                <div class="ui message error visible">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <div class="ui message error">
+            </div>
+        </form>
+
+        <div class="ui message">
+            Not work? <a href="mailto:ibuler@qq.com">Contact us</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

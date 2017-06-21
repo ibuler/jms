@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load mytags %}
+{% block title %}授权管理{% endblock %}
+{% block css %}
+    .icon:hover{
+        color: red;
+    }
+{% endblock %}
+{% block content %}
+    <div class="ui right floated small primary labeled icon button" id="perm_add_btn"><i class="Heterosexual icon"></i> Add </div>
+    <h1 class="ui header">授权列表</h1>
+    <table class="ui striped table">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>用户数量</th>
+            <th>主机数量</th>
+            <th>备注</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr>
+                <td>{{ object.name }}</td>
+                <td>{{ object.user.count }}</td>
+                <td>{{ object.asset.count }}</td>
+                <td>{{ object.comment }}</td>
+                <td>
+                    <i class="perm del remove icon" href="{% url 'perms:del' object.id %}"></i>
+                    <a href="{% url 'perms:detail' user.id %}"><i class="arrow circle outline right icon"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="ui small modal transition hidden">
+        <i class="close icon"></i>
+        <div class="header">
+            添加授权
+        </div>
+
+        <div class="content">
+            <form class="ui form"  method="post" action="{% url 'perms:add' %}">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="ui button" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var csrftoken = Cookies.get('csrftoken');
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $('#perm_add_btn').click(function () {
+                $('.small.modal')
+                        .modal('show');
+            });
+
+            $('.perm.del').click(function(){
+                var url = $(this).attr('href');
+                if (confirm('确定删除?')){
+                    $.post(
+                        url,
+                        function(){
+                            console.log('删除成功');
+                            location.reload()
+                        }
+                    )
+                }
+            })
+        })
+    </script>
+{% endblock %}
