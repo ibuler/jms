@@ -29,19 +29,23 @@
                 <td>{{ user.date_joined|date:"Y-m-d H:i:s" }}</td>
                 {% if user.is_superuser %}
                     <td class="aligned">
-                        <i class="large green checkmark icon"></i>
+                        <i class="green checkmark icon"></i>
                     </td>
                 {% else %}
                     <td></td>
                 {% endif %}
                 {% if not user.is_active %}
-                    <td class="error"><i class="attention icon"></i> 否</td>
+                    <td class="error"><i class="remove icon"></i></td>
                 {% else %}
                     <td class="aligned">
-                        <i class="large green checkmark icon"></i>
+                        <i class="green checkmark icon"></i>
                     </td>
                 {% endif %}
-                <td><i class="remove user icon" href="{% url 'users:del' %}" value="{{ user.id }}"></i></td>
+                <td>
+                    <i class="remove user icon" href="{% url 'users:del' user.id %}" ></i>
+                    <a href="{% url 'users:update' user.id %}" ><i class="edit icon"></i></a>
+                </td>
+
             </tr>
         {% endfor %}
         </tbody>
@@ -92,19 +96,16 @@
 
             $('.remove.user').click(function(){
                 var url = $(this).attr('href');
-                var id = $(this).attr('value');
                 if (confirm('确定删除')){
                     $.post(
                             url,
-                            {'id': id},
                             function(){
                                 console.log('删除用户成功');
                                 location.reload()
                             }
                     )
                 }
-            })
-
+            });
         })
     </script>
 {% endblock %}

@@ -28,7 +28,7 @@
                 <td>{{ object.comment }}</td>
                 <td>
                     <i class="perm del remove icon" href="{% url 'perms:del' object.id %}"></i>
-                    <a href="{% url 'perms:detail' user.id %}"><i class="arrow circle outline right icon"></i></a>
+                    <a href="{% url 'perms:detail' object.id %}" > <i class="arrow circle outline right icon"></i></a>
                 </td>
             </tr>
         {% endfor %}

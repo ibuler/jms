@@ -15,11 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def index(request):
+    return render(request, 'index.html')
 
 
 urlpatterns = [
-    url(r'^user/', include('users.urls')),
-    url(r'^asset/', include('assets.urls')),
-    url(r'^perm/', include('perms.urls')),
+    url('^$', index),
+    url(r'^users/', include('users.urls')),
+    url(r'^assets/', include('assets.urls')),
+    url(r'^perms/', include('perms.urls')),
     url(r'^admin/', admin.site.urls),
 ]

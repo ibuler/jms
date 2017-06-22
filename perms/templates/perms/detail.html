@@ -22,11 +22,11 @@
             </tr>
             </thead>
             <tbody>
-            {% for user in object.user.all %}
+            {% for u in object.user.all %}
             <tr>
-                <td>{{ user.name }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
             </tr>
             {% endfor %}
             </tbody>

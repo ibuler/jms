@@ -2,7 +2,7 @@
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.views.generic import ListView, CreateView, DetailView, View
+from django.views.generic import ListView, CreateView, DetailView, View, UpdateView
 from django.urls import reverse_lazy
 
 from .forms import AssetForm
@@ -26,6 +26,13 @@ class AssetCreateView(LoginRequiredMixin, CreateView):
 class AssetDetailView(LoginRequiredMixin, DetailView):
     model = Asset
     template_name = "assets/detail.html"
+
+
+class AssetUpdateView(LoginRequiredMixin, UpdateView):
+    model = Asset
+    form_class = AssetForm
+    template_name = "assets/update.html"
+    success_url = reverse_lazy("assets:list")
 
 
 class AssetDeleteView(LoginRequiredMixin, View):
