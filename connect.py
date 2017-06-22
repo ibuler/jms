@@ -17,6 +17,8 @@
 
 """
 
+from __future__ import unicode_literals
+
 import os
 import sys
 import paramiko
@@ -33,7 +35,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'jms.settings'
 django.setup()
 
 from perms.perm_api import get_user_asset
-from django.contrib.auth.models import User
+from users.models import User
 from assets.models import Asset
 
 
@@ -180,9 +182,9 @@ class TTYNav:
         return input_
 
     def print_user_assets(self):
-        print('%-16s\t%s' % ('IP', 'User'))
+        print('%-16s\t%-16s\t%s' % ('Hostname', 'IP', 'User'))
         for asset in get_user_asset(self.user):
-            print('%-16s\t%s' % (asset.ip, asset.username))
+            print('%-16s\t%-16s\t%s' % (asset.hostname, asset.ip, asset.username))
 
     @staticmethod
     def connect(ip):

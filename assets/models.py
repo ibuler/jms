@@ -12,7 +12,7 @@ class Asset(models.Model):
         ('B', 'BSD'),
     ]
     hostname = models.CharField(verbose_name="Hostname", unique=True, max_length=128)
-    ip = models.GenericIPAddressField(verbose_name='IP')
+    ip = models.GenericIPAddressField(verbose_name='IP', unique=True)
     port = models.IntegerField(default=22, verbose_name='端口')
     username = models.CharField(max_length=20, verbose_name='管理用户名')
     password = models.CharField(max_length=32, verbose_name='管理密码')
