@@ -37,9 +37,7 @@ class AssetUpdateView(LoginRequiredMixin, UpdateView):
 
 class AssetDeleteView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
-        asset_id = self.kwargs.get("id", 0)
+        asset_id = self.kwargs.get("pk", 0)
         asset = get_object_or_404(Asset, id=asset_id)
         asset.delete()
         return HttpResponse('删除成功')
-
-

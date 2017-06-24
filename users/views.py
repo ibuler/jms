@@ -14,10 +14,10 @@ from .forms import UserAddForm, UserUpdateForm
 from .utils import Bash, ServerUserManager
 
 
-CONNECTPY_PATH = os.path.join(settings.BASE_DIR, 'connect.py')
+CONNECTPY_PATH = os.path.join(settings.BASE_DIR, 'init.sh')
 
 
-@login_required(login_url=reverse_lazy('users:login'))
+@login_required
 @user_passes_test(lambda user: user.is_superuser)
 def user_add(request):
     form = UserAddForm(request.POST)
@@ -94,11 +94,8 @@ def login_(request):
         password = request.POST.get('password', '')
         user = authenticate(username=username, password=password)
         if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('users:list'))
-            else:
-                error = '用户已禁用'
+            login(request, user)
+            return HttpResponseRedirect(reverse('users:list'))
         else:
             error = '用户密码不正确'
     return render(request, 'users/login.html', {'error': error})
@@ -106,4 +103,8 @@ def login_(request):
 
 def logout_(request):
     logout(request)
-    return HttpResponse("hello")
+    return HttpResponseRedirect(reverse("users:login"))
+
+
+
+
