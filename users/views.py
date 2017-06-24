@@ -1,14 +1,20 @@
 # coding: utf-8
 
+import os
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.conf import settings
 
 from .models import User
 from .forms import UserAddForm, UserUpdateForm
 from .utils import Bash, ServerUserManager
+
+
+CONNECTPY_PATH = os.path.join(settings.BASE_DIR, 'connect.py')
 
 
 @login_required(login_url=reverse_lazy('users:login'))
@@ -21,7 +27,9 @@ def user_add(request):
         user = form.save(commit=False)
         # user.set_password(password)
         user_in_server = ServerUserManager(Bash)
-        ret, msg = user_in_server.present(username=username, password=password)
+        ret, msg = user_in_server.present(username=username,
+                                          password=password,
+                                          shell=CONNECTPY_PATH)
         if not ret:
             user.save()
             return HttpResponseRedirect(reverse('users:list'))
@@ -29,7 +37,8 @@ def user_add(request):
             user_in_server.absent(username)
             return HttpResponse(msg)
     else:
-        return HttpResponse('验证失败')
+        error_msg = form.errors
+        return HttpResponse('验证失败: %s' % error_msg)
 
 
 @login_required(login_url=reverse_lazy('users:login'))
@@ -72,6 +81,8 @@ def user_list(request):
 @user_passes_test(lambda user: user.is_superuser)
 def user_del(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    user_in_server = ServerUserManager(Bash)
+    ret, msg = user_in_server.absent(user.username, force=True)
     user.delete()
     return HttpResponse('删除成功')
 
@@ -95,4 +106,4 @@ def login_(request):
 
 def logout_(request):
     logout(request)
-    return HttpResponseRedirect(reverse('users:login'))
+    return HttpResponse("hello")

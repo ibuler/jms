@@ -34,8 +34,8 @@ class ServerUserManager(object):
     def __init__(self, sh):
         self.sh = sh()
 
-    def present(self, username='', password=''):
-        cmd_add = 'id {username} || useradd  {username}'.format(username=username)
+    def present(self, username='', password='', shell="/bin/bash"):
+        cmd_add = 'id {username} || useradd  {username} -s {shell}'.format(username=username, shell=shell)
         self.sh.execute(cmd_add)
 
         if self.sh.code != 0:

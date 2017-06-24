@@ -26,7 +26,7 @@ SECRET_KEY = 'hvv68$&6=d#y&0bch1s-i4+5%%2rm!(#(v)occnvz9&i&@ks*m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -130,4 +130,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # Set global static file dir
 ]
 
-LOGIN_URL = '/user/login/'
+LOGIN_URL = '/users/login/'
