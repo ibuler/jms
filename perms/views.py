@@ -6,7 +6,8 @@ from django.views.generic import ListView, CreateView, DetailView, View
 from django.views.generic.edit import SingleObjectMixin
 from django.urls import reverse_lazy
 
-from users.mixins import LoginRequiredMixin
+#from users.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from users.models import User
 from .forms import PermForm
 from .models import Perm
